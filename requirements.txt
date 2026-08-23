@@ -1,0 +1,26 @@
+# Dependências do Backend & RAG
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+python-multipart>=0.0.6
+pydantic>=2.0
+
+# Dependências LangChain & LLM
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchain-openai>=0.1.0
+langchain-groq>=0.1.0
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.4
+
+# Leitores de Múltiplos Formatos de Arquivo
+pypdf>=3.17.0
+python-docx>=1.0.0
+python-pptx>=0.6.21
+pandas>=2.0.0
+openpyxl>=3.1.0
+beautifulsoup4>=4.12.0
+
+# Interface Streamlit & utilitários
+streamlit>=1.30.0
+python-dotenv>=1.0.0

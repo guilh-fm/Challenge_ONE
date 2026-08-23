@@ -1,0 +1,28 @@
+# Variáveis de ambiente e segredos
+.env
+*.env
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Ambientes virtuais
+env/
+venv/
+ENV/
+.venv
+
+# Banco vetorial e temporários
+vector_store/
+faiss_index/
+temp/
+*.pdf
+!documentos/manual_colaborador_santos_pegasus.md
+
+# Logs e IDE
+*.log
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PegasusAI - Santos Pegasus Soluciones</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Base de Conhecimento -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fa-solid me-fa-horse-head fa-dragon"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Santos Pegasus</h2>
+                    <span>Soluciones Tech</span>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fa-solid fa-cloud"></i> Status da Nuvem OCI
+            </div>
+            <div class="status-card">
+                <span class="pulse-dot"></span>
+                <span>Oracle Cloud Infrastructure: <strong>Online</strong></span>
+            </div>
+
+            <div class="section-title">
+                <i class="fa-solid fa-folder-open"></i> Upload de Documentos
+            </div>
+            <div class="upload-box" id="uploadBox">
+                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                <p>Arraste arquivos ou <strong>clique aqui</strong></p>
+                <span class="file-types">PDF, DOCX, XLSX, PPTX, MD, CSV, JSON, HTML</span>
+                <input type="file" id="fileInput" multiple style="display: none;">
+            </div>
+            <div id="uploadStatus" class="upload-status"></div>
+
+            <div class="section-title">
+                <i class="fa-solid fa-book"></i> Documentos Indexados
+            </div>
+            <div class="document-list" id="documentList">
+                <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando...</div>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>Alura Agentes Challenge ONE © 2026</p>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Header -->
+            <header class="chat-header">
+                <div class="header-info">
+                    <h1><i class="fa-solid fa-robot"></i> PegasusAI Specialist</h1>
+                    <p>Assistente virtual de documentação corporativa para a <strong>Santos Pegasus Soluciones</strong></p>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-rag"><i class="fa-solid fa-bolt"></i> RAG LangChain</span>
+                    <span class="badge badge-oci"><i class="fa-solid fa-server"></i> OCI Ready</span>
+                </div>
+            </header>
+
+            <!-- Chat Container -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="message system-message">
+                    <div class="avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="message-content">
+                        <h3>Olá! Sou o PegasusAI.</h3>
+                        <p>Estou preparado para responder a qualquer dúvida sobre os processos, normativas, RH, infraestrutura OCI e políticas da <strong>Santos Pegasus Soluciones</strong>.</p>
+                        
+                        <div class="quick-prompts">
+                            <button class="prompt-btn" onclick="usarPromptQuick('Quais são os benefícios de RH oferecidos pela empresa?')">
+                                💡 Benefícios de RH
+                            </button>
+                            <button class="prompt-btn" onclick="usarPromptQuick('Quais são as diretrizes de arquitetura de microsserviços e testes?')">
+                                🛠️ Arquitetura e Testes
+                            </button>
+                            <button class="prompt-btn" onclick="usarPromptQuick('Como funciona a segurança e o deploy na Oracle Cloud (OCI)?')">
+                                ☁️ Deploy na Oracle Cloud (OCI)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-area">
+                <form id="chatForm" onsubmit="enviarMensagem(event)">
+                    <div class="input-wrapper">
+                        <input type="text" id="userInput" placeholder="Digite sua pergunta sobre a documentação da empresa..." autocomplete="off">
+                        <button type="submit" id="sendBtn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
