@@ -4,7 +4,7 @@ from backend.rag_engine import RAGEngine
 
 # Configuração da Página
 st.set_page_config(
-    page_title="Santos Pegasus AI - Agente Corporativo",
+    page_title="Santos Pegasus AI - Agente Corporativo Groq",
     page_icon="🦄",
     layout="wide"
 )
@@ -32,16 +32,13 @@ if "historico" not in st.session_state:
 with st.sidebar:
     st.image("https://img.icons8.com/isometric-folders/100/unicorn.png", width=70)
     st.markdown("<div class='empresa-title'>Santos Pegasus</div>", unsafe_allow_html=True)
-    st.markdown("<div class='empresa-subtitle'>Tira-Dúvidas Corporativo RAG</div>", unsafe_allow_html=True)
+    st.markdown("<div class='empresa-subtitle'>Tira-Dúvidas Corporativo Groq</div>", unsafe_allow_html=True)
     
     st.divider()
     
-    st.subheader("⚙️ Configurações do Modelo")
-    modelo_selecionado = st.radio("Provedor LLM", ["OpenAI (gpt-4o-mini)", "Groq (llama-3.3-70b)"])
-    if "OpenAI" in modelo_selecionado:
-        os.environ["LLM_PROVIDER"] = "openai"
-    else:
-        os.environ["LLM_PROVIDER"] = "groq"
+    st.subheader("⚙️ Provedor LLM Exclusivo")
+    st.info("⚡ Modelo Ativo: Groq (`groq/compound-mini`)")
+    os.environ["LLM_PROVIDER"] = "groq"
 
     st.divider()
 
@@ -72,8 +69,8 @@ with st.sidebar:
         st.warning("Nenhum documento na base.")
 
 # Área Principal
-st.markdown("# 🦄 PegasusAI - Agente Corporativo")
-st.markdown("Bem-vindo ao **PegasusAI**, seu assistente especialista na documentação interna da **Santos Pegasus Soluciones**. Tire suas dúvidas sobre RH, Engenharia, Financeiro e mais!")
+st.markdown("# 🦄 PegasusAI - Agente Corporativo (Groq Powered)")
+st.markdown("Bem-vindo ao **PegasusAI**, seu assistente especialista na documentação interna da **Santos Pegasus Soluciones**. Respostas em altíssima velocidade impulsionadas pela **Groq**!")
 
 st.divider()
 
@@ -98,7 +95,7 @@ if pergunta_usuario:
 
     # Processa resposta
     with st.chat_message("assistant"):
-        with st.spinner("Buscando na documentação da empresa..."):
+        with st.spinner("Buscando na documentação da empresa via Groq..."):
             resultado = st.session_state["rag_engine"].responder_pergunta(
                 pergunta=pergunta_usuario,
                 historico=st.session_state["historico"]
