@@ -16,7 +16,8 @@ from backend.document_loaders import carregar_arquivo_por_extensao
 class RAGEngine:
     def __init__(self, pasta_documentos: str = "documentos"):
         self.pasta_documentos = pasta_documentos
-        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        # Modelo de Embeddings Multilíngue otimizado para busca semântica em Português
+        self.embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
         self.vector_store = None
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=800,
@@ -43,7 +44,7 @@ class RAGEngine:
         if documentos_todos:
             chunks = self.text_splitter.split_documents(documentos_todos)
             self.vector_store = FAISS.from_documents(chunks, self.embeddings)
-            print(f"[RAG Engine] Indexados {len(chunks)} trechos de {len(self.documentos_indexados)} arquivos.")
+            print(f"[RAG Engine] Indexados {len(chunks)} trechos de {len(self.documentos_indexados)} arquivos com modelo Multilíngue.")
         else:
             print("[RAG Engine] Nenhum documento prévio encontrado na pasta 'documentos'.")
 
@@ -79,12 +80,13 @@ class RAGEngine:
         if self.llm is None:
             self.llm = criar_llm()
 
-        # Busca os 4 trechos mais relevantes no FAISS
-        docs_relevantes = self.vector_store.similarity_search(pergunta, k=4)
+        # Busca os 6 trechos mais relevantes no FAISS usando busca semântica em Português
+        docs_relevantes = self.vector_store.similarity_search(pergunta, k=6)
 
         # Formata o contexto e extrai as fontes
         contexto_lista = []
         fontes = []
+        fontes_vistas = set()
         
         for idx, doc in enumerate(docs_relevantes, start=1):
             meta = doc.metadata
@@ -95,12 +97,15 @@ class RAGEngine:
             detalhe_pagina = f" (Pág/Seção: {pagina})" if pagina != "" else ""
             contexto_lista.append(f"--- Trecho {idx} [{fonte_nome}{detalhe_pagina}] ---\n{doc.page_content}")
             
-            fontes.append({
-                "arquivo": fonte_nome,
-                "formato": formato,
-                "detalhe": detalhe_pagina,
-                "trecho": doc.page_content[:200] + "..."
-            })
+            chave_fonte = (fonte_nome, detalhe_pagina)
+            if chave_fonte not in fontes_vistas:
+                fontes_vistas.add(chave_fonte)
+                fontes.append({
+                    "arquivo": fonte_nome,
+                    "formato": formato,
+                    "detalhe": detalhe_pagina,
+                    "trecho": doc.page_content[:200] + "..."
+                })
 
         contexto_str = "\n\n".join(contexto_lista)
 
