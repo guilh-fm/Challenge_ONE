@@ -7,34 +7,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadBox = document.getElementById('uploadBox');
     const fileInput = document.getElementById('fileInput');
 
-    uploadBox.addEventListener('click', () => fileInput.click());
+    if (uploadBox && fileInput) {
+        uploadBox.addEventListener('click', () => fileInput.click());
 
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            fazerUploadArquivos(e.target.files);
-        }
-    });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fazerUploadArquivos(e.target.files);
+            }
+        });
 
-    uploadBox.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadBox.style.borderColor = '#3b82f6';
-    });
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.style.borderColor = '#3b82f6';
+        });
 
-    uploadBox.addEventListener('dragleave', () => {
-        uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-    });
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        });
 
-    uploadBox.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        if (e.dataTransfer.files.length > 0) {
-            fazerUploadArquivos(e.dataTransfer.files);
-        }
-    });
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            if (e.dataTransfer.files.length > 0) {
+                fazerUploadArquivos(e.dataTransfer.files);
+            }
+        });
+    }
 });
 
 async function carregarDocumentos() {
     const listEl = document.getElementById('documentList');
+    if (!listEl) return;
     try {
         const response = await fetch(`${API_URL}/api/documents`);
         const data = await response.json();
@@ -56,7 +59,7 @@ async function carregarDocumentos() {
 
 async function fazerUploadArquivos(files) {
     const statusEl = document.getElementById('uploadStatus');
-    statusEl.innerHTML = '<span style="color:#60a5fa;"><i class="fa-solid fa-spinner fa-spin"></i> Indexando...</span>';
+    if (statusEl) statusEl.innerHTML = '<span style="color:#60a5fa;"><i class="fa-solid fa-spinner fa-spin"></i> Indexando...</span>';
 
     for (let file of files) {
         const formData = new FormData();
@@ -68,30 +71,34 @@ async function fazerUploadArquivos(files) {
                 body: formData
             });
             const data = await res.json();
-            statusEl.innerHTML = `<span style="color:#10b981;">✓ ${data.arquivo} indexado!</span>`;
+            if (statusEl) statusEl.innerHTML = `<span style="color:#10b981;">✓ ${data.arquivo} indexado!</span>`;
         } catch (e) {
-            statusEl.innerHTML = `<span style="color:#ef4444;">Erro no upload de ${file.name}</span>`;
+            if (statusEl) statusEl.innerHTML = `<span style="color:#ef4444;">Erro no upload de ${file.name}</span>`;
         }
     }
 
     setTimeout(() => {
-        statusEl.innerHTML = '';
+        if (statusEl) statusEl.innerHTML = '';
         carregarDocumentos();
     }, 2500);
 }
 
 function usarPromptQuick(texto) {
-    document.getElementById('userInput').value = texto;
-    document.getElementById('sendBtn').click();
+    const inputEl = document.getElementById('userInput');
+    if (inputEl) {
+        inputEl.value = texto;
+        const sendBtn = document.getElementById('sendBtn');
+        if (sendBtn) sendBtn.click();
+    }
 }
 
 async function enviarMensagem(event) {
     event.preventDefault();
     const inputEl = document.getElementById('userInput');
-    const pergunta = inputEl.value.trim();
+    const pergunta = inputEl ? inputEl.value.trim() : '';
     if (!pergunta) return;
 
-    inputEl.value = '';
+    if (inputEl) inputEl.value = '';
 
     // Adiciona mensagem do Usuário
     adicionarMensagemUI('user', pergunta);
@@ -116,8 +123,17 @@ async function enviarMensagem(event) {
     }
 }
 
+function renderizarMarkdown(texto) {
+    if (typeof marked !== 'undefined' && marked.parse) {
+        return marked.parse(texto);
+    }
+    return texto.replace(/\n/g, '<br>');
+}
+
 function adicionarMensagemUI(role, texto, fontes = []) {
     const chatContainer = document.getElementById('chatMessages');
+    if (!chatContainer) return;
+
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${role}-message`;
 
@@ -138,10 +154,12 @@ function adicionarMensagemUI(role, texto, fontes = []) {
         `;
     }
 
+    const conteudoHTML = role === 'assistant' ? renderizarMarkdown(texto) : `<p>${texto.replace(/\n/g, '<br>')}</p>`;
+
     msgDiv.innerHTML = `
         <div class="avatar">${icon}</div>
         <div class="message-content">
-            <p>${texto.replace(/\n/g, '<br>')}</p>
+            <div class="markdown-body">${conteudoHTML}</div>
             ${fontesHTML}
         </div>
     `;
@@ -152,6 +170,8 @@ function adicionarMensagemUI(role, texto, fontes = []) {
 
 function adicionarMensagemLoading() {
     const chatContainer = document.getElementById('chatMessages');
+    if (!chatContainer) return null;
+
     const id = 'loading-' + Date.now();
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message assistant-message';
@@ -170,6 +190,7 @@ function adicionarMensagemLoading() {
 }
 
 function removerMensagem(id) {
+    if (!id) return;
     const el = document.getElementById(id);
     if (el) el.remove();
 }

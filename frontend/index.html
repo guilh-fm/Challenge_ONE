@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked.js para renderização perfeita de Markdown, Tabelas e Formatações -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -79,6 +81,9 @@
                         <p>Estou preparado para responder a qualquer dúvida sobre os processos, normativas, RH, infraestrutura OCI e políticas da <strong>Santos Pegasus Soluciones</strong>.</p>
                         
                         <div class="quick-prompts">
+                            <button class="prompt-btn" onclick="usarPromptQuick('Qual a história da Pegasus?')">
+                                📖 História da Empresa
+                            </button>
                             <button class="prompt-btn" onclick="usarPromptQuick('Quais são os benefícios de RH oferecidos pela empresa?')">
                                 💡 Benefícios de RH
                             </button>
