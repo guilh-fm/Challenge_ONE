@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MODELO_OPENAI_PADRAO = "gpt-4o-mini"
-MODELO_GROQ_PADRAO = "llama-3.3-70b-versatile"
+MODELO_GROQ_PADRAO = "groq/compound-mini"
 
 def buscar_variavel(nome_variavel):
     valor = os.getenv(nome_variavel)

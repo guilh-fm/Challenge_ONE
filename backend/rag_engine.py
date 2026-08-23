@@ -1,7 +1,12 @@
 import os
 import glob
 from typing import List, Dict, Any, Tuple
-from langchain_community.embeddings import HuggingFaceEmbeddings
+
+try:
+    from langchain_huggingface import HuggingFaceEmbeddings
+except ImportError:
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from backend.config import criar_llm

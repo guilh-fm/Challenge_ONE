@@ -50,11 +50,25 @@ def processar_chat(requisicao: ChatRequest):
     if not requisicao.pergunta.strip():
         raise HTTPException(status_code=400, detail="A pergunta não pode estar vazia.")
     
-    resultado = rag_engine.responder_pergunta(
-        pergunta=requisicao.pergunta,
-        historico=requisicao.historico
-    )
-    return resultado
+    try:
+        resultado = rag_engine.responder_pergunta(
+            pergunta=requisicao.pergunta,
+            historico=requisicao.historico
+        )
+        return resultado
+    except Exception as e:
+        erro_str = str(e)
+        if "insufficient_quota" in erro_str or "429" in erro_str:
+            msg_erro = "⚠️ Erro de cota da OpenAI: Sua chave da OpenAI excedeu o limite de créditos. Altere para a chave da Groq (gratuita) ou adicione créditos na OpenAI no seu arquivo .env."
+        elif "api_key" in erro_str.lower() or "not configured" in erro_str.lower():
+            msg_erro = "⚠️ Chave de API não configurada. Configure a OPENAI_API_KEY ou GROQ_API_KEY no arquivo .env."
+        else:
+            msg_erro = f"Erro na chamada da LLM: {erro_str}"
+
+        return {
+            "resposta": msg_erro,
+            "fontes": []
+        }
 
 @app.post("/api/upload")
 async def carregar_documento(file: UploadFile = File(...)):
