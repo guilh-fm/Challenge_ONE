@@ -2,11 +2,10 @@
 ### Challenge Alura Agentes - Challenge ONE
 
 [![Alura Challenge](https://img.shields.io/badge/Alura-Challenge%20Agentes-blueviolet?style=for-the-badge)](https://www.alura.com.br)
-[![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle%20Cloud-OCI%20Ready-red?style=for-the-badge&logo=oracle)](https://cloud.oracle.com)
+[![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle%20Cloud-OCI%20Live%20Online-green?style=for-the-badge&logo=oracle)](http://147.15.2.200:8000)
 [![Groq](https://img.shields.io/badge/Groq-API%20Powered-orange?style=for-the-badge)](https://console.groq.com)
 [![LangChain](https://img.shields.io/badge/LangChain-RAG%20Powered-green?style=for-the-badge)](https://www.langchain.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit)](https://streamlit.io)
 
 ---
 
@@ -21,14 +20,14 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 ## ☁️ Evidência de Deploy na Nuvem (Oracle Cloud Infrastructure - OCI)
 
 > [!IMPORTANT]
-> **Aplicação no Ar na Oracle Cloud (OCI):**
-> O deploy do projeto foi realizado na infraestrutura de nuvem **Oracle Cloud Infrastructure (OCI Compute Instance)** utilizando Docker containers.
+> **Aplicação Online na Oracle Cloud (OCI):**
+> O deploy do projeto está funcionando **100% online em produção** na infraestrutura de nuvem **Oracle Cloud Infrastructure (OCI Compute Instance)** no IP público:
+> 
+> 🌐 **Link Público de Acesso na Nuvem OCI**: **`http://147.15.2.200:8000`**
 
 ### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
 ![Demonstração do Agente PegasusAI na Oracle Cloud](https://raw.githubusercontent.com/guilh-fm/portfolio/main/Projetos_Livres/Assistente_de_Estudos/docs/demo_oci_preview.png)
-
-> *(Link de Acesso OCI: `http://<IP_PUBLICO_DA_VM_ORACLE>:8000`)*
 
 ---
 
@@ -64,7 +63,7 @@ O **PegasusAI** está preparado para responder a qualquer dúvida corporativa co
 > - **Auxílio Home Office**: R$ 300 mensais para despesas de escritório em casa.  
 > - **Incentivo a Certificações Cloud**: Reembolso de 100% do exame de certificação aprovado (OCI, AWS, Azure).  
 > - **Gympass / Wellhub**: Cobertura nacional e global."*  
-> 📄 **Fonte Citada:** `manual_colaborador_santos_pegasus.md`
+> 📄 **Fonte Citada:** `manual_onboarding_santos_pegasus.pdf`
 
 ---
 
@@ -79,7 +78,7 @@ Seguindo a metodologia ágil proposta no Challenge Alura Agentes, o projeto foi 
 | | | | Pipeline LangChain RAG com FAISS |
 | | | | Prompt corporativo Santos Pegasus |
 | | | | API REST em FastAPI & App Streamlit |
-| | | | Interface Web Premium (Glassmorphism) |
+| | | | Interface Web Premium (Glassmorphic) |
 | | | | Containerização Docker & Docker Compose |
 | | | | Script de Deploy na Oracle Cloud (OCI) |
 
@@ -177,9 +176,9 @@ Para colocar o projeto no ar na nuvem Oracle:
 
 1. Suba uma instância VM no plano **Always Free da OCI**.
 2. Libere a porta `8000` nas **Security Lists da VCN** e no firewall do SO.
-3. Instale o Docker e execute:
+3. Instale as dependências ou utilize Docker:
    ```bash
-   docker-compose up -d --build
+   nohup python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 &
    ```
 
 > 📌 Para o passo a passo completo com telas e comandos OCI, consulte o [oracle_cloud_deploy.md](oracle_cloud_deploy.md).
