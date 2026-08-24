@@ -4,9 +4,10 @@ from typing import List, Optional, Dict, Any
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from backend.rag_engine import RAGEngine
+from backend.rag_engine import RAGEngine, MAPA_TITULOS_DOCUMENTOS
 from backend.config import MODELOS_GROQ
 
 app = FastAPI(
@@ -44,9 +45,24 @@ def health_check():
 
 @app.get("/api/documents")
 def listar_documentos():
+    arquivos = rag_engine.obter_documentos_indexados()
+    documentos_formatados = []
+    for arq in arquivos:
+        titulo = MAPA_TITULOS_DOCUMENTOS.get(arq, arq.replace("_", " ").replace(".pdf", "").title())
+        documentos_formatados.append({
+            "arquivo": arq,
+            "titulo": titulo
+        })
     return {
-        "documentos": rag_engine.obter_documentos_indexados()
+        "documentos": documentos_formatados
     }
+
+@app.get("/documentos/{filename}")
+def obter_documento_pdf(filename: str):
+    caminho_arquivo = os.path.join("documentos", filename)
+    if os.path.exists(caminho_arquivo):
+        return FileResponse(caminho_arquivo, media_type="application/pdf")
+    raise HTTPException(status_code=404, detail="Documento não encontrado.")
 
 @app.get("/api/models")
 def listar_modelos():

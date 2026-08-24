@@ -13,6 +13,16 @@ from backend.config import criar_llm
 from backend.prompts import obter_prompt_corporativo
 from backend.document_loaders import carregar_arquivo_por_extensao
 
+# Mapeamento de nomes de arquivo para títulos amigáveis corporativos
+MAPA_TITULOS_DOCUMENTOS = {
+    "manual_onboarding_santos_pegasus.pdf": "Manual de Onboarding - Cultura & Valores",
+    "guia_engenharia_backend_santos_pegasus.pdf": "Guia Oficial de Engenharia Back-end (v3.0.0)",
+    "guia_engenharia_frontend_santos_pegasus.pdf": "Guia Oficial de Engenharia Front-end (v2.0.0)",
+    "protocolo_resposta_incidentes_sre_santos_pegasus.pdf": "Protocolo de Incidentes & Confiabilidade (SRE)",
+    "arquitetura_microsservicos_mapa_dominios_santos_pegasus.pdf": "Arquitetura de Microsserviços & Domínios",
+    "manual_colaborador_santos_pegasus.md": "Manual do Colaborador & Benefícios RH"
+}
+
 class RAGEngine:
     def __init__(self, pasta_documentos: str = "documentos"):
         self.pasta_documentos = pasta_documentos
@@ -20,7 +30,7 @@ class RAGEngine:
         self.embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
         self.vector_store = None
         
-        # Chunk Size expandido (1500 caracteres) e Overlap (400) para garantir que parágrafos e seções inteiras não sejam divididos
+        # Chunk Size expandido (1500 caracteres) e Overlap (400) para garantir parágrafos e seções completas
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1500,
             chunk_overlap=400,
@@ -81,7 +91,7 @@ class RAGEngine:
         # Instancia o LLM do Groq com o modelo selecionado dinamicamente
         llm = criar_llm(modelo_especifico=modelo_llm)
 
-        # Expansão inteligente da consulta para aumentar precisão em perguntas curtas (ex: 'foi fundada em qual ano?')
+        # Expansão inteligente da consulta para aumentar precisão em perguntas curtas
         termo_busca = pergunta
         if len(pergunta.split()) <= 6:
             termo_busca = f"{pergunta} fundação quando nasceu criação história ano criadores fundadores"
@@ -106,8 +116,10 @@ class RAGEngine:
             chave_fonte = (fonte_nome, detalhe_pagina)
             if chave_fonte not in fontes_vistas:
                 fontes_vistas.add(chave_fonte)
+                titulo_amigavel = MAPA_TITULOS_DOCUMENTOS.get(fonte_nome, fonte_nome.replace("_", " ").replace(".pdf", "").title())
                 fontes.append({
                     "arquivo": fonte_nome,
+                    "titulo": titulo_amigavel,
                     "formato": formato,
                     "detalhe": detalhe_pagina,
                     "trecho": doc.page_content[:200] + "..."
