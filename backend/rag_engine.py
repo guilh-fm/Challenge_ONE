@@ -19,10 +19,12 @@ class RAGEngine:
         # Modelo de Embeddings Multilíngue otimizado para busca semântica em Português
         self.embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
         self.vector_store = None
+        
+        # Chunk Size expandido (1500 caracteres) e Overlap (400) para garantir que parágrafos e seções inteiras não sejam divididos
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=800,
-            chunk_overlap=150,
-            separators=["\n\n", "\n", " ", ""]
+            chunk_size=1500,
+            chunk_overlap=400,
+            separators=["\n\n", "\n", ". ", " "]
         )
         self.documentos_indexados = set()
         
@@ -43,7 +45,7 @@ class RAGEngine:
         if documentos_todos:
             chunks = self.text_splitter.split_documents(documentos_todos)
             self.vector_store = FAISS.from_documents(chunks, self.embeddings)
-            print(f"[RAG Engine] Indexados {len(chunks)} trechos de {len(self.documentos_indexados)} arquivos com modelo Multilíngue.")
+            print(f"[RAG Engine] Indexados {len(chunks)} trechos expandidos de {len(self.documentos_indexados)} arquivos.")
         else:
             print("[RAG Engine] Nenhum documento prévio encontrado na pasta 'documentos'.")
 
@@ -79,8 +81,13 @@ class RAGEngine:
         # Instancia o LLM do Groq com o modelo selecionado dinamicamente
         llm = criar_llm(modelo_especifico=modelo_llm)
 
-        # Busca os 6 trechos mais relevantes no FAISS usando busca semântica em Português
-        docs_relevantes = self.vector_store.similarity_search(pergunta, k=6)
+        # Expansão inteligente da consulta para aumentar precisão em perguntas curtas (ex: 'foi fundada em qual ano?')
+        termo_busca = pergunta
+        if len(pergunta.split()) <= 6:
+            termo_busca = f"{pergunta} fundação quando nasceu criação história ano criadores fundadores"
+
+        # Busca os 6 trechos mais relevantes no FAISS
+        docs_relevantes = self.vector_store.similarity_search(termo_busca, k=6)
 
         # Formata o contexto e extrai as fontes
         contexto_lista = []
