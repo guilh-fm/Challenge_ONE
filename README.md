@@ -3,6 +3,7 @@
 
 [![Alura Challenge](https://img.shields.io/badge/Alura-Challenge%20Agentes-blueviolet?style=for-the-badge)](https://www.alura.com.br)
 [![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle%20Cloud-OCI%20Ready-red?style=for-the-badge&logo=oracle)](https://cloud.oracle.com)
+[![Groq](https://img.shields.io/badge/Groq-API%20Powered-orange?style=for-the-badge)](https://console.groq.com)
 [![LangChain](https://img.shields.io/badge/LangChain-RAG%20Powered-green?style=for-the-badge)](https://www.langchain.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit)](https://streamlit.io)
@@ -17,17 +18,53 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 
 ---
 
-## ☁️ Demonstração da Aplicação em Nuvem (Oracle Cloud Infrastructure - OCI)
+## ☁️ Evidência de Deploy na Nuvem (Oracle Cloud Infrastructure - OCI)
 
 > [!IMPORTANT]
 > **Aplicação no Ar na Oracle Cloud (OCI):**
-> O deploy do projeto foi realizado com sucesso na infraestrutura de nuvem **Oracle Cloud Infrastructure (OCI Compute Instance)** utilizando Docker containers.
+> O deploy do projeto foi realizado na infraestrutura de nuvem **Oracle Cloud Infrastructure (OCI Compute Instance)** utilizando Docker containers.
 
-### 📸 Imagem / Vídeo da Aplicação em Execução no OCI:
+### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
 ![Demonstração do Agente PegasusAI na Oracle Cloud](https://raw.githubusercontent.com/guilh-fm/portfolio/main/Projetos_Livres/Assistente_de_Estudos/docs/demo_oci_preview.png)
 
-> *(Substitua o link da imagem acima pela captura de tela ou GIF do seu projeto rodando na URL pública da sua VM Oracle Cloud: `http://<SEU_IP_OCI>:8000`)*
+> *(Link de Acesso OCI: `http://<IP_PUBLICO_DA_VM_ORACLE>:8000`)*
+
+---
+
+## ❓ Exemplos de Perguntas que o Agente Responde
+
+O **PegasusAI** está preparado para responder a qualquer dúvida corporativa com base nos manuais e PDFs da empresa:
+
+1. **História e Cultura**: *"Qual a história da Santos Pegasus Soluciones e quando foi fundada?"*
+2. **RH e Benefícios**: *"Quais são os benefícios de RH oferecidos aos colaboradores CLT?"*
+3. **Engenharia Back-end**: *"Quais são as diretrizes de testes automatizados e versão do Java no Back-end?"*
+4. **Engenharia Front-end**: *"Quais são as regras de arquitetura para o desenvolvimento Front-end?"*
+5. **Segurança e SRE**: *"Como funciona o protocolo de resposta a incidentes e o plantão On-Call da equipe SRE?"*
+6. **Infraestrutura Cloud**: *"Quais são as diretrizes de segurança nas VCNs da Oracle Cloud (OCI)?"*
+
+---
+
+## 💬 Exemplos de Respostas Geradas pelo Agente
+
+### Exemplo 1: Pergunta sobre Fundação da Empresa
+> **Pergunta:** *"Foi fundada em qual ano?"*  
+> **Resposta Gerada pelo PegasusAI:**  
+> *"A **Santo Pegasus Soluciones** foi fundada no ano de **2018**, na garagem de um sobrado no bairro da Vila Madalena, em São Paulo, por três fundadores: uma engenheira de dados, um arquiteto de software e uma product designer."*  
+> 📄 **Fonte Citada:** `manual_onboarding_santos_pegasus.pdf` *(Pág/Seção: 1)*
+
+---
+
+### Exemplo 2: Pergunta sobre Benefícios de Recursos Humanos
+> **Pergunta:** *"Quais são os benefícios de RH da empresa?"*  
+> **Resposta Gerada pelo PegasusAI:**  
+> *"A Santos Pegasus Soluciones oferece um pacote completo de benefícios flexíveis para colaboradores CLT:*  
+> - **Vale Refeição/Alimentação**: Cartão Flash flexível.  
+> - **Plano de Saúde e Odontológico**: Bradesco Saúde Top Nacional sem co-participação para o titular.  
+> - **Auxílio Home Office**: R$ 300 mensais para despesas de escritório em casa.  
+> - **Incentivo a Certificações Cloud**: Reembolso de 100% do exame de certificação aprovado (OCI, AWS, Azure).  
+> - **Gympass / Wellhub**: Cobertura nacional e global."*  
+> 📄 **Fonte Citada:** `manual_colaborador_santos_pegasus.md`
 
 ---
 
@@ -90,7 +127,7 @@ O agente compreende e realiza busca semântica em **8 extensões de arquivo dife
                                            ▼                         ▼
                               ┌─────────────────────────┐   ┌──────────────────┐
                               │ Vector Store (FAISS)    │   │ LLM Provider     │
-                              │ Embeddings Locais       │   │ (OpenAI / Groq)  │
+                              │ Embeddings Multilíngue  │   │ (Groq Models)    │
                               └─────────────────────────┘   └──────────────────┘
 ```
 
@@ -98,35 +135,24 @@ O agente compreende e realiza busca semântica em **8 extensões de arquivo dife
 
 ## 🛠️ Como Executar o Projeto Localmente
 
-### Pré-requisitos:
-- Python 3.10 ou superior
-- Git
-
 ### 1. Clonar o Repositório e Instalar Dependências:
 ```bash
-git clone https://github.com/SEU_USUARIO/Challenge_ONE.git
+git clone https://github.com/guilh-fm/Challenge_ONE.git
 cd Challenge_ONE
 
-# Criar ambiente virtual
+# Criar e ativar ambiente virtual
 python -m venv venv
-# Ativar no Windows:
-venv\Scripts\activate
-# Ativar no Linux/Mac:
-source venv/bin/activate
+.\venv\Scripts\activate
 
 # Instalar dependências
 pip install -r requirements.txt
 ```
 
 ### 2. Configurar Variáveis de Ambiente:
-Crie o arquivo `.env` baseado no `.env.example`:
-```bash
-cp .env.example .env
-```
-Edite o arquivo `.env` adicionando sua chave da OpenAI ou Groq:
+Crie o arquivo `.env`:
 ```env
-LLM_PROVIDER=openai
-OPENAI_API_KEY=sk-sua-chave-aqui
+LLM_PROVIDER=groq
+GROQ_API_KEY=gsk_sua_chave_groq_aqui
 ```
 
 ### 3. Iniciar a Aplicação:
@@ -161,5 +187,5 @@ Para colocar o projeto no ar na nuvem Oracle:
 ---
 
 ## ✒️ Autor e Créditos
-Desenvolvido como projeto final do **Challenge Alura Agentes**.
-Tecnologias: Python, LangChain, FAISS, FastAPI, Streamlit, Docker e Oracle Cloud Infrastructure (OCI).
+Desenvolvido por **Guilherme** para a **Santos Pegasus Soluciones** como projeto final do **Challenge Alura Agentes**.  
+Tecnologias: Python, LangChain, FAISS, Groq API, FastAPI, Streamlit, Docker e Oracle Cloud Infrastructure (OCI).
