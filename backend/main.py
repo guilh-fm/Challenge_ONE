@@ -35,10 +35,17 @@ class ChatRequest(BaseModel):
 
 @app.get("/api/health")
 def health_check():
+    # Detecta se a aplicação está rodando na Oracle Cloud (OCI) ou em Desenvolvimento Local
+    is_oci = os.getenv("OCI_DEPLOYMENT", "").lower() in ["true", "1"] or os.path.exists("/.dockerenv")
+    tipo_ambiente = "oci" if is_oci else "local"
+    nome_ambiente = "Oracle Cloud Infrastructure (OCI)" if is_oci else "Ambiente Local (Desenvolvimento)"
+
     return {
         "status": "online",
         "empresa": "Santos Pegasus Soluciones",
         "agente": "PegasusAI RAG Specialist",
+        "ambiente_tipo": tipo_ambiente,
+        "ambiente_nome": nome_ambiente,
         "documentos_indexados": len(rag_engine.obter_documentos_indexados()),
         "modelos_disponiveis": MODELOS_GROQ
     }
