@@ -193,8 +193,8 @@ async function enviarMensagem(event) {
 function renderizarMarkdown(texto) {
     if (!texto) return '';
 
-    // Pré-processa delimitadores de equações do formato colchete [ \frac... ] para KaTeX
-    let textoProcessado = texto.replace(/\[\s*(\\frac[\s\S]*?)\s*\]/g, '$$$$ $1 $$$$');
+    // Converte sintaxe de colchetes de fórmulas [ ... ] para KaTeX explicito $$ ... $$
+    let textoProcessado = texto.replace(/\[\s*([\s\S]*?(?:\\frac|\\cdot|_|\^|=|\\boxed)[\s\S]*?)\s*\]/g, '\n\n$$$$ $1 $$$$\n\n');
 
     if (typeof marked !== 'undefined' && marked.parse) {
         return marked.parse(textoProcessado);
@@ -265,8 +265,10 @@ function adicionarMensagemUI(role, texto, fontes = []) {
                     {left: '$$', right: '$$', display: true},
                     {left: '$', right: '$', display: false},
                     {left: '\\[', right: '\\]', display: true},
-                    {left: '\\(', right: '\\)', display: false}
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '[', right: ']', display: true}
                 ],
+                ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
                 throwOnError: false
             });
         } catch (e) {
