@@ -2,6 +2,8 @@ const API_URL = window.location.origin;
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarDocumentos();
+    verificarStatusAmbiente();
+    inicializarTema();
 
     // Upload Click & Drag-and-drop
     const uploadBox = document.getElementById('uploadBox');
@@ -34,6 +36,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+async function verificarStatusAmbiente() {
+    const statusTextEl = document.getElementById('statusText');
+    const statusCardEl = document.getElementById('statusCard');
+    const envBadgeEl = document.getElementById('envBadge');
+
+    try {
+        const response = await fetch(`${API_URL}/api/health`);
+        const data = await response.json();
+
+        const ehOCI = data.ambiente_tipo === 'oci';
+
+        if (statusTextEl && statusCardEl) {
+            if (ehOCI) {
+                statusTextEl.innerHTML = 'Oracle Cloud (OCI): <strong>Online</strong>';
+                statusCardEl.className = 'status-card status-oci';
+            } else {
+                statusTextEl.innerHTML = 'Ambiente Local (Dev): <strong>Online</strong>';
+                statusCardEl.className = 'status-card status-local';
+            }
+        }
+
+        if (envBadgeEl) {
+            if (ehOCI) {
+                envBadgeEl.className = 'badge badge-oci';
+                envBadgeEl.innerHTML = '<i class="fa-solid fa-cloud"></i> Oracle Cloud (OCI)';
+            } else {
+                envBadgeEl.className = 'badge badge-local';
+                envBadgeEl.innerHTML = '<i class="fa-solid fa-laptop-code"></i> Ambiente Local (Dev)';
+            }
+        }
+    } catch (e) {
+        if (statusTextEl) statusTextEl.innerHTML = 'Status: <strong>Offline</strong>';
+    }
+}
+
+function inicializarTema() {
+    const temaSalvo = localStorage.getItem('pegasus_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', temaSalvo);
+}
+
+function alternarTema() {
+    const temaAtual = document.documentElement.getAttribute('data-theme') || 'dark';
+    const novoTema = temaAtual === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', novoTema);
+    localStorage.setItem('pegasus_theme', novoTema);
+}
 
 async function carregarDocumentos() {
     const listEl = document.getElementById('documentList');

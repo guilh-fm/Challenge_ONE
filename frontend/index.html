@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Marked.js para renderização perfeita de Markdown, Tabelas e Formatações -->
+    <!-- Marked.js para renderização de Markdown e Tabelas -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
         <aside class="sidebar">
             <div class="brand">
                 <div class="logo-icon">
-                    <i class="fa-solid me-fa-horse-head fa-dragon"></i>
+                    <i class="fa-solid fa-dragon"></i>
                 </div>
                 <div class="brand-text">
                     <h2>Santos Pegasus</h2>
@@ -39,11 +39,11 @@
             </div>
 
             <div class="section-title">
-                <i class="fa-solid fa-cloud"></i> Status da Nuvem OCI
+                <i class="fa-solid fa-server"></i> Ambientes & Status Real
             </div>
-            <div class="status-card">
+            <div class="status-card" id="statusCard">
                 <span class="pulse-dot"></span>
-                <span>Oracle Cloud Infrastructure: <strong>Online</strong></span>
+                <span id="statusText">Verificando Ambiente...</span>
             </div>
 
             <div class="section-title">
@@ -77,10 +77,17 @@
                     <h1><i class="fa-solid fa-robot"></i> PegasusAI Specialist</h1>
                     <p>Assistente virtual de documentação corporativa para a <strong>Santos Pegasus Soluciones</strong></p>
                 </div>
-                <div class="header-badges">
-                    <span class="badge badge-groq"><i class="fa-solid fa-bolt"></i> Groq Powered</span>
-                    <span class="badge badge-rag"><i class="fa-solid fa-brain"></i> RAG Multilíngue</span>
-                    <span class="badge badge-oci"><i class="fa-solid fa-server"></i> OCI Ready</span>
+                <div class="header-actions">
+                    <div class="header-badges">
+                        <span class="badge badge-groq"><i class="fa-solid fa-bolt"></i> Groq Powered</span>
+                        <span class="badge badge-rag"><i class="fa-solid fa-brain"></i> RAG Multilíngue</span>
+                        <span class="badge badge-oci" id="envBadge"><i class="fa-solid fa-laptop-code"></i> Local Dev</span>
+                    </div>
+                    <!-- Botão de Alternância de Tema Claro / Escuro -->
+                    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="alternarTema()" title="Alternar Tema Claro/Escuro">
+                        <i class="fa-solid fa-sun icon-sun"></i>
+                        <i class="fa-solid fa-moon icon-moon"></i>
+                    </button>
                 </div>
             </header>
 
