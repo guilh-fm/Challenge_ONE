@@ -95,7 +95,11 @@ function usarPromptQuick(texto) {
 async function enviarMensagem(event) {
     event.preventDefault();
     const inputEl = document.getElementById('userInput');
+    const modelSelectEl = document.getElementById('modelSelect');
+
     const pergunta = inputEl ? inputEl.value.trim() : '';
+    const modeloSelecionado = modelSelectEl ? modelSelectEl.value : 'openai/gpt-oss-120b';
+
     if (!pergunta) return;
 
     if (inputEl) inputEl.value = '';
@@ -110,7 +114,11 @@ async function enviarMensagem(event) {
         const res = await fetch(`${API_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pergunta: pergunta, historico: [] })
+            body: JSON.stringify({
+                pergunta: pergunta,
+                historico: [],
+                modelo_llm: modeloSelecionado
+            })
         });
         const data = await res.json();
 

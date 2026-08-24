@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.rag_engine import RAGEngine
+from backend.config import MODELOS_GROQ
 
 app = FastAPI(
     title="Santos Pegasus Soluciones - PegasusAI RAG API",
@@ -29,6 +30,7 @@ rag_engine = RAGEngine(pasta_documentos="documentos")
 class ChatRequest(BaseModel):
     pergunta: str
     historico: Optional[List[Dict[str, str]]] = []
+    modelo_llm: Optional[str] = "openai/gpt-oss-120b"
 
 @app.get("/api/health")
 def health_check():
@@ -36,13 +38,20 @@ def health_check():
         "status": "online",
         "empresa": "Santos Pegasus Soluciones",
         "agente": "PegasusAI RAG Specialist",
-        "documentos_indexados": len(rag_engine.obter_documentos_indexados())
+        "documentos_indexados": len(rag_engine.obter_documentos_indexados()),
+        "modelos_disponiveis": MODELOS_GROQ
     }
 
 @app.get("/api/documents")
 def listar_documentos():
     return {
         "documentos": rag_engine.obter_documentos_indexados()
+    }
+
+@app.get("/api/models")
+def listar_modelos():
+    return {
+        "modelos": MODELOS_GROQ
     }
 
 @app.post("/api/chat")
@@ -53,17 +62,18 @@ def processar_chat(requisicao: ChatRequest):
     try:
         resultado = rag_engine.responder_pergunta(
             pergunta=requisicao.pergunta,
-            historico=requisicao.historico
+            historico=requisicao.historico,
+            modelo_llm=requisicao.modelo_llm
         )
         return resultado
     except Exception as e:
         erro_str = str(e)
         if "insufficient_quota" in erro_str or "429" in erro_str:
-            msg_erro = "⚠️ Erro de cota da OpenAI: Sua chave da OpenAI excedeu o limite de créditos. Altere para a chave da Groq (gratuita) ou adicione créditos na OpenAI no seu arquivo .env."
+            msg_erro = "⚠️ Erro de cota da API. Por favor, selecione outro modelo Groq na lista."
         elif "api_key" in erro_str.lower() or "not configured" in erro_str.lower():
-            msg_erro = "⚠️ Chave de API não configurada. Configure a OPENAI_API_KEY ou GROQ_API_KEY no arquivo .env."
+            msg_erro = "⚠️ GROQ_API_KEY não encontrada. Configure a variável de ambiente."
         else:
-            msg_erro = f"Erro na chamada da LLM: {erro_str}"
+            msg_erro = f"Erro na chamada da LLM Groq: {erro_str}"
 
         return {
             "resposta": msg_erro,

@@ -24,7 +24,6 @@ class RAGEngine:
             chunk_overlap=150,
             separators=["\n\n", "\n", " ", ""]
         )
-        self.llm = None
         self.documentos_indexados = set()
         
         # Inicializa a base lendo os arquivos da pasta 'documentos'
@@ -70,15 +69,15 @@ class RAGEngine:
     def obter_documentos_indexados(self) -> List[str]:
         return list(self.documentos_indexados)
 
-    def responder_pergunta(self, pergunta: str, historico: List[Dict[str, str]] = None) -> Dict[str, Any]:
+    def responder_pergunta(self, pergunta: str, historico: List[Dict[str, str]] = None, modelo_llm: str = None) -> Dict[str, Any]:
         if self.vector_store is None:
             return {
                 "resposta": "Nenhum documento foi indexado ainda. Por favor, adicione documentos na pasta 'documentos' ou via upload na interface.",
                 "fontes": []
             }
 
-        if self.llm is None:
-            self.llm = criar_llm()
+        # Instancia o LLM do Groq com o modelo selecionado dinamicamente
+        llm = criar_llm(modelo_especifico=modelo_llm)
 
         # Busca os 6 trechos mais relevantes no FAISS usando busca semântica em Português
         docs_relevantes = self.vector_store.similarity_search(pergunta, k=6)
@@ -121,7 +120,7 @@ class RAGEngine:
             question=pergunta
         )
 
-        resposta_llm = self.llm.invoke(prompt_final)
+        resposta_llm = llm.invoke(prompt_final)
         conteudo_resposta = resposta_llm.content if hasattr(resposta_llm, "content") else str(resposta_llm)
 
         return {

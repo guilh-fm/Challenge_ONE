@@ -41,7 +41,7 @@ body {
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
 }
 
 .brand {
@@ -76,12 +76,44 @@ body {
     letter-spacing: 0.05em;
 }
 
+/* Dropdown Seletor de Modelo */
+.model-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.model-select {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.8);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.model-select:hover, .model-select:focus {
+    border-color: var(--accent-blue);
+    background: rgba(30, 41, 59, 0.9);
+}
+
+.model-select option {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 8px;
+}
+
 .section-title {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-top: 10px;
+    margin-top: 6px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -116,7 +148,7 @@ body {
 .upload-box {
     border: 2px dashed var(--border-color);
     border-radius: 12px;
-    padding: 16px;
+    padding: 14px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -129,9 +161,9 @@ body {
 }
 
 .upload-icon {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     color: var(--accent-blue);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .upload-box p {
@@ -228,6 +260,7 @@ body {
     gap: 6px;
 }
 
+.badge-groq { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
 .badge-rag { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
 .badge-oci { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
 
