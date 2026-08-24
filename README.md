@@ -26,9 +26,10 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 
 ### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
-![Demonstração do Agente PegasusAI na Oracle Cloud](https://raw.githubusercontent.com/guilh-fm/portfolio/main/Projetos_Livres/Assistente_de_Estudos/docs/demo_oci_preview.png)
+![Demonstração do Agente PegasusAI na Oracle Cloud]<img width="1915" height="992" alt="image" src="https://github.com/user-attachments/assets/64cc32be-af94-4a55-ac9a-43a9cc50ba67" />
 
-> *(Link de Acesso OCI: `http://<IP_PUBLICO_DA_VM_ORACLE>:8000`)*
+
+> *(Link de Acesso OCI: `http://147.15.2.200:8000/`)*
 
 ---
 
