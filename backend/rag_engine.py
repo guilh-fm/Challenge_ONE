@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from typing import List, Dict, Any, Tuple
 
 try:
@@ -30,10 +31,10 @@ class RAGEngine:
         self.embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
         self.vector_store = None
         
-        # Chunk Size expandido (1500 caracteres) e Overlap (400) para garantir parágrafos e seções completas
+        # Chunking otimizado com preservação de parágrafos
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1500,
-            chunk_overlap=400,
+            chunk_size=1200,
+            chunk_overlap=300,
             separators=["\n\n", "\n", ". ", " "]
         )
         self.documentos_indexados = set()
@@ -55,9 +56,9 @@ class RAGEngine:
         if documentos_todos:
             chunks = self.text_splitter.split_documents(documentos_todos)
             self.vector_store = FAISS.from_documents(chunks, self.embeddings)
-            print(f"[RAG Engine] Indexados {len(chunks)} trechos expandidos de {len(self.documentos_indexados)} arquivos.")
+            print(f"[RAG Engine High-Perf] Indexados {len(chunks)} trechos de {len(self.documentos_indexados)} arquivos.")
         else:
-            print("[RAG Engine] Nenhum documento prévio encontrado na pasta 'documentos'.")
+            print("[RAG Engine High-Perf] Nenhum documento prévio encontrado na pasta 'documentos'.")
 
     def adicionar_documento(self, caminho_arquivo: str) -> int:
         docs = carregar_arquivo_por_extensao(caminho_arquivo)
@@ -75,11 +76,70 @@ class RAGEngine:
 
         nome_base = os.path.basename(caminho_arquivo)
         self.documentos_indexados.add(nome_base)
-        print(f"[RAG Engine] Adicionados {len(chunks)} trechos do arquivo '{nome_base}'.")
+        print(f"[RAG Engine High-Perf] Adicionados {len(chunks)} trechos do arquivo '{nome_base}'.")
         return len(chunks)
 
     def obter_documentos_indexados(self) -> List[str]:
         return list(self.documentos_indexados)
+
+    def expandir_consulta(self, pergunta: str) -> List[str]:
+        """
+        Técnica de Multi-Query Expansion: Gera variações da pergunta para capturar
+        tanto palavras-chave exatas quanto a intenção semântica profunda.
+        """
+        consultas = [pergunta]
+        palavras = [p.lower() for p in re.findall(r'\w+', pergunta) if len(p) > 2]
+        
+        # Se for pergunta sobre fundação / criação / história
+        if any(w in pergunta.lower() for w in ['fundad', 'criad', 'nasc', 'histór', 'historia', 'inicio', 'início', 'origem', 'ano']):
+            consultas.append("nossa historia nasceu em fundacao ano criadores vila madalena 2018 fundadores")
+        
+        # Se for sobre RH / Benefícios / Férias / Salário
+        if any(w in pergunta.lower() for w in ['rh', 'benefic', 'benefíc', 'feria', 'férias', 'trabalh', 'salari', 'refeic', 'refeiç']):
+            consultas.append("recursos humanos beneficios vr va flash plano de saude ferias CLT onboarding pessoas")
+            
+        # Se for sobre Engenharia / Arquitetura / Código / SRE
+        if any(w in pergunta.lower() for w in ['backend', 'front', 'arquitet', 'microsserv', 'sre', 'incident', 'deploy', 'oci', 'java', 'docker']):
+            consultas.append("engenharia de software microsservicos arquitetura gRPC kafka docker oci cloud aws sre plantao")
+
+        if palavras:
+            consultas.append(" ".join(palavras))
+
+        return consultas
+
+    def reordenar_e_filtrar_chunks(self, pergunta: str, docs_candidatos: List[Any], top_k: int = 6) -> List[Any]:
+        """
+        Técnica de Re-Ranking Semântico & Palavras-Chave (Hybrid Scoring):
+        Avalia a relevância de cada trecho recuperado e seleciona os melhores sem duplicatas.
+        """
+        palavras_pergunta = set(re.findall(r'\w+', pergunta.lower()))
+        scores = []
+        vistos = set()
+
+        for doc in docs_candidatos:
+            conteudo = doc.page_content
+            if conteudo in vistos:
+                continue
+            vistos.add(conteudo)
+
+            conteudo_lower = conteudo.lower()
+            palavras_conteudo = set(re.findall(r'\w+', conteudo_lower))
+            
+            # Cálculo de sobreposição de palavras-chave
+            interseccao = palavras_pergunta.intersection(palavras_conteudo)
+            overlap_score = len(interseccao) / (len(palavras_pergunta) + 1e-5)
+
+            # Bônus para números/datas se a pergunta envolver números (ex: "ano", "quando", "quais")
+            bonus_numero = 0
+            if any(w in pergunta.lower() for w in ['ano', 'quando', 'quanto', 'data', 'valor']) and re.search(r'\b\d{4}\b|\b\d+\b', conteudo):
+                bonus_numero = 0.5
+
+            pontuacao_total = overlap_score + bonus_numero
+            scores.append((pontuacao_total, doc))
+
+        # Ordena do maior pro menor score
+        scores.sort(key=lambda x: x[0], reverse=True)
+        return [doc for score, doc in scores[:top_k]]
 
     def responder_pergunta(self, pergunta: str, historico: List[Dict[str, str]] = None, modelo_llm: str = None) -> Dict[str, Any]:
         if self.vector_store is None:
@@ -91,15 +151,19 @@ class RAGEngine:
         # Instancia o LLM do Groq com o modelo selecionado dinamicamente
         llm = criar_llm(modelo_especifico=modelo_llm)
 
-        # Expansão inteligente da consulta para aumentar precisão em perguntas curtas
-        termo_busca = pergunta
-        if len(pergunta.split()) <= 6:
-            termo_busca = f"{pergunta} fundação quando nasceu criação história ano criadores fundadores"
+        # 1. Multi-Query Expansion
+        consultas = self.expandir_consulta(pergunta)
 
-        # Busca os 6 trechos mais relevantes no FAISS
-        docs_relevantes = self.vector_store.similarity_search(termo_busca, k=6)
+        # 2. Busca Multi-Vetorial no FAISS
+        candidatos = []
+        for q in consultas:
+            res_q = self.vector_store.similarity_search(q, k=4)
+            candidatos.extend(res_q)
 
-        # Formata o contexto e extrai as fontes
+        # 3. Hybrid Re-Ranking & Deduplicação
+        docs_relevantes = self.reordenar_e_filtrar_chunks(pergunta, candidatos, top_k=6)
+
+        # 4. Formata contexto e extrai fontes
         contexto_lista = []
         fontes = []
         fontes_vistas = set()
