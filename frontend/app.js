@@ -43,18 +43,27 @@ async function carregarDocumentos() {
         const data = await response.json();
         
         if (data.documentos && data.documentos.length > 0) {
-            listEl.innerHTML = data.documentos.map(doc => `
-                <div class="doc-item">
-                    <i class="fa-regular fa-file-lines"></i>
-                    <span>${doc}</span>
-                </div>
-            `).join('');
+            listEl.innerHTML = data.documentos.map(doc => {
+                const tituloFormatado = doc.titulo || doc.arquivo || doc;
+                const nomeArquivo = doc.arquivo || doc;
+                return `
+                    <div class="doc-item" onclick="visualizarDocumento('${nomeArquivo}')" title="Clique para visualizar ${tituloFormatado}">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span class="doc-title">${tituloFormatado}</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square doc-open-icon"></i>
+                    </div>
+                `;
+            }).join('');
         } else {
             listEl.innerHTML = '<p style="font-size:0.8rem; color:#6b7280;">Nenhum documento indexado.</p>';
         }
     } catch (err) {
         listEl.innerHTML = '<p style="font-size:0.8rem; color:#ef4444;">Erro ao carregar lista.</p>';
     }
+}
+
+function visualizarDocumento(nomeArquivo) {
+    window.open(`${API_URL}/documentos/${encodeURIComponent(nomeArquivo)}`, '_blank');
 }
 
 async function fazerUploadArquivos(files) {
@@ -138,6 +147,17 @@ function renderizarMarkdown(texto) {
     return texto.replace(/\n/g, '<br>');
 }
 
+function alternarFontes(btnEl) {
+    const parent = btnEl.closest('.message-content');
+    if (!parent) return;
+    const sourcesWrapper = parent.querySelector('.citations-popover');
+    if (sourcesWrapper) {
+        const estaVisivel = sourcesWrapper.style.display === 'block';
+        sourcesWrapper.style.display = estaVisivel ? 'none' : 'block';
+        btnEl.classList.toggle('ativo', !estaVisivel);
+    }
+}
+
 function adicionarMensagemUI(role, texto, fontes = []) {
     const chatContainer = document.getElementById('chatMessages');
     if (!chatContainer) return;
@@ -148,16 +168,23 @@ function adicionarMensagemUI(role, texto, fontes = []) {
     const icon = role === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
 
     let fontesHTML = '';
-    if (fontes && fontes.length > 0) {
+    if (role === 'assistant' && fontes && fontes.length > 0) {
         fontesHTML = `
-            <div class="citations-wrapper">
-                <div class="citation-title"><i class="fa-solid fa-quote-left"></i> Fontes Citadas:</div>
-                ${fontes.map(f => `
-                    <div class="citation-card">
-                        <strong>📄 ${f.arquivo}</strong> ${f.detalhe}
-                        <p style="color:#9ca3af; font-size:0.75rem; margin-top:2px;">"${f.trecho}"</p>
+            <div class="citations-action-bar">
+                <button class="btn-ver-fontes" onclick="alternarFontes(this)">
+                    <i class="fa-solid fa-book-bookmark"></i> Ver Fontes Citadas (${fontes.length})
+                </button>
+                <div class="citations-popover" style="display: none;">
+                    <div class="citation-popover-header">
+                        <span><i class="fa-solid fa-quote-left"></i> Fontes Consultadas</span>
                     </div>
-                `).join('')}
+                    ${fontes.map(f => `
+                        <div class="citation-card" onclick="visualizarDocumento('${f.arquivo}')" style="cursor:pointer;" title="Clique para abrir ${f.arquivo}">
+                            <strong>📄 ${f.titulo || f.arquivo}</strong> ${f.detalhe}
+                            <p style="color:#9ca3af; font-size:0.75rem; margin-top:2px;">"${f.trecho}"</p>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
         `;
     }

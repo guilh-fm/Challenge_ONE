@@ -191,20 +191,52 @@ body {
     gap: 8px;
 }
 
+/* Item da Lista de Documentos Indexados (Com Título Limpo e Clicável) */
 .doc-item {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
     padding: 10px 12px;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    word-break: break-all;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.doc-item i {
-    color: var(--accent-blue);
+.doc-item:hover {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: var(--accent-blue);
+    transform: translateX(2px);
+}
+
+.doc-item i.fa-file-pdf {
+    color: #ef4444;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.doc-title {
+    flex: 1;
+    color: #e2e8f0;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.doc-open-icon {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.doc-item:hover .doc-open-icon {
+    opacity: 1;
+    color: var(--accent-cyan);
 }
 
 .sidebar-footer {
@@ -456,31 +488,72 @@ body {
     color: #e2e8f0;
 }
 
-/* Citations Cards */
-.citations-wrapper {
-    margin-top: 16px;
+/* Citações em Botão Clicável e Popover Interativo */
+.citations-action-bar {
+    margin-top: 12px;
     border-top: 1px dashed var(--border-color);
-    padding-top: 12px;
+    padding-top: 10px;
 }
 
-.citation-title {
-    font-size: 0.8rem;
+.btn-ver-fontes {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-ver-fontes:hover, .btn-ver-fontes.ativo {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+}
+
+.citations-popover {
+    margin-top: 10px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.citation-popover-header {
+    font-size: 0.78rem;
     color: var(--accent-cyan);
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .citation-card {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 0.8rem;
-    margin-top: 4px;
+    margin-top: 6px;
+    transition: background 0.2s ease;
+}
+
+.citation-card:hover {
+    background: rgba(59, 130, 246, 0.15);
 }
 
 .citation-card strong {
-    color: var(--accent-blue);
+    color: #60a5fa;
 }
 
 /* Chat Input Bar */
