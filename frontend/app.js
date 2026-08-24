@@ -191,10 +191,15 @@ async function enviarMensagem(event) {
 }
 
 function renderizarMarkdown(texto) {
+    if (!texto) return '';
+
+    // Pré-processa delimitadores de equações do formato colchete [ \frac... ] para KaTeX
+    let textoProcessado = texto.replace(/\[\s*(\\frac[\s\S]*?)\s*\]/g, '$$$$ $1 $$$$');
+
     if (typeof marked !== 'undefined' && marked.parse) {
-        return marked.parse(texto);
+        return marked.parse(textoProcessado);
     }
-    return texto.replace(/\n/g, '<br>');
+    return textoProcessado.replace(/\n/g, '<br>');
 }
 
 function alternarFontes(btnEl) {
@@ -251,6 +256,23 @@ function adicionarMensagemUI(role, texto, fontes = []) {
 
     chatContainer.appendChild(msgDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // Renderiza Fórmulas Matemáticas via KaTeX se houver
+    if (role === 'assistant' && typeof renderMathInElement !== 'undefined') {
+        try {
+            renderMathInElement(msgDiv, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            });
+        } catch (e) {
+            console.warn('Erro ao renderizar KaTeX:', e);
+        }
+    }
 }
 
 function adicionarMensagemLoading() {
