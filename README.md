@@ -27,14 +27,8 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 
 ### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
-![Demonstração do Agente PegasusAI na Oracle Cloud]<img width="1915" height="992" alt="image" src="https://github.com/user-attachments/assets/64cc32be-af94-4a55-ac9a-43a9cc50ba67" />
+<img width="1917" height="1024" alt="image" src="https://github.com/user-attachments/assets/1bb0f88c-a560-4eab-af0d-8bcef93673ec" />[Demonstração do Agente PegasusAI na Oracle Cloud]
 
-<<<<<<< HEAD
-=======
-
-> *(Link de Acesso OCI: `http://147.15.2.200:8000/`)*
-
->>>>>>> 07cf6e17d9d8710d5652ff660b54f957e42cd3f3
 ---
 
 ## ❓ Exemplos de Perguntas que o Agente Responde
@@ -70,23 +64,6 @@ O **PegasusAI** está preparado para responder a qualquer dúvida corporativa co
 > - **Incentivo a Certificações Cloud**: Reembolso de 100% do exame de certificação aprovado (OCI, AWS, Azure).  
 > - **Gympass / Wellhub**: Cobertura nacional e global."*  
 > 📄 **Fonte Citada:** `manual_onboarding_santos_pegasus.pdf`
-
----
-
-## 📋 Quadro Trello - Acompanhamento Ágil
-
-Seguindo a metodologia ágil proposta no Challenge Alura Agentes, o projeto foi organizado nas seguintes etapas de desenvolvimento:
-
-| 📥 Pronto para Começar | 🚧 Em Desenvolvimento | ⏸️ Pausado | ✅ Concluído |
-| :--- | :--- | :--- | :--- |
-| Configurar certificado SSL no OCI | Integração de testes E2E | Refatoração de banco SQL | Estudo do assistente de estudos prévio |
-| Suporte a conectores de banco nativos | | | Módulo de extração de 8 formatos de arquivo |
-| | | | Pipeline LangChain RAG com FAISS |
-| | | | Prompt corporativo Santos Pegasus |
-| | | | API REST em FastAPI & App Streamlit |
-| | | | Interface Web Premium (Glassmorphic) |
-| | | | Containerização Docker & Docker Compose |
-| | | | Script de Deploy na Oracle Cloud (OCI) |
 
 ---
 
