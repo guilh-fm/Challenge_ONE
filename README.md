@@ -27,14 +27,8 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 
 ### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
-![Demonstração do Agente PegasusAI na Oracle Cloud]<img width="1915" height="992" alt="image" src="https://github.com/user-attachments/assets/64cc32be-af94-4a55-ac9a-43a9cc50ba67" />
+![Demonstração do Agente PegasusAI na Oracle Cloud](https://raw.githubusercontent.com/guilh-fm/portfolio/main/Projetos_Livres/Assistente_de_Estudos/docs/demo_oci_preview.png)
 
-<<<<<<< HEAD
-=======
-
-> *(Link de Acesso OCI: `http://147.15.2.200:8000/`)*
-
->>>>>>> 07cf6e17d9d8710d5652ff660b54f957e42cd3f3
 ---
 
 ## ❓ Exemplos de Perguntas que o Agente Responde
@@ -83,7 +77,7 @@ Seguindo a metodologia ágil proposta no Challenge Alura Agentes, o projeto foi 
 | Suporte a conectores de banco nativos | | | Módulo de extração de 8 formatos de arquivo |
 | | | | Pipeline LangChain RAG com FAISS |
 | | | | Prompt corporativo Santos Pegasus |
-| | | | API REST em FastAPI & App Streamlit |
+| | | | API REST em FastAPI & Web App |
 | | | | Interface Web Premium (Glassmorphic) |
 | | | | Containerização Docker & Docker Compose |
 | | | | Script de Deploy na Oracle Cloud (OCI) |
@@ -116,7 +110,7 @@ O agente compreende e realiza busca semântica em **8 extensões de arquivo dife
                                                   │
                                    HTTP / REST    ▼
                      ┌──────────────────────────────────────────┐
-                     │ Interface Web Glassmorphic / Streamlit   │
+                     │ Interface Web Glassmorphic (FastAPI)     │
                      └────────────────────┬─────────────────────┘
                                           │
                                           ▼
@@ -162,17 +156,10 @@ GROQ_API_KEY=gsk_sua_chave_groq_aqui
 
 ### 3. Iniciar a Aplicação:
 
-**Opção 1: Servidor FastAPI + Interface Web Premium**
 ```bash
 python -m uvicorn backend.main:app --reload --port 8000
 ```
 Acesse no navegador: `http://localhost:8000`
-
-**Opção 2: Interface Streamlit**
-```bash
-python -m streamlit run streamlit_app.py
-```
-Acesse no navegador: `http://localhost:8501`
 
 ---
 
@@ -193,4 +180,4 @@ Para colocar o projeto no ar na nuvem Oracle:
 
 ## ✒️ Autor e Créditos
 Desenvolvido por **Guilherme** para a **Santos Pegasus Soluciones** como projeto final do **Challenge Alura Agentes**.  
-Tecnologias: Python, LangChain, FAISS, Groq API, FastAPI, Streamlit, Docker e Oracle Cloud Infrastructure (OCI).
+Tecnologias: Python, LangChain, FAISS, Groq API, FastAPI, Docker e Oracle Cloud Infrastructure (OCI).
