@@ -27,7 +27,11 @@ O agente funciona como uma **base de conhecimento conversacional centralizada** 
 
 ### 📸 Captura de Tela / Vídeo da Aplicação em Execução no OCI:
 
+<<<<<<< HEAD
 ![Demonstração do Agente PegasusAI na Oracle Cloud](https://raw.githubusercontent.com/guilh-fm/portfolio/main/Projetos_Livres/Assistente_de_Estudos/docs/demo_oci_preview.png)
+=======
+<img width="1917" height="1024" alt="image" src="https://github.com/user-attachments/assets/1bb0f88c-a560-4eab-af0d-8bcef93673ec" />[Demonstração do Agente PegasusAI na Oracle Cloud]
+>>>>>>> c8933a69f98230a9706f984b696a317c969a60f4
 
 ---
 
@@ -67,6 +71,7 @@ O **PegasusAI** está preparado para responder a qualquer dúvida corporativa co
 
 ---
 
+<<<<<<< HEAD
 ## 📋 Quadro Trello - Acompanhamento Ágil
 
 Seguindo a metodologia ágil proposta no Challenge Alura Agentes, o projeto foi organizado nas seguintes etapas de desenvolvimento:
@@ -84,6 +89,8 @@ Seguindo a metodologia ágil proposta no Challenge Alura Agentes, o projeto foi 
 
 ---
 
+=======
+>>>>>>> c8933a69f98230a9706f984b696a317c969a60f4
 ## 📁 Formatos de Documentos Suportados (8 Formatos)
 
 O agente compreende e realiza busca semântica em **8 extensões de arquivo diferentes**:
